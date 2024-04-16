@@ -57,9 +57,7 @@ app.post('/create-doc', async (req, res) => {
         compression: "DEFLATE",
     });
     fs.writeFileSync(path.resolve(__dirname, `./Documents/Doc${uuidv4()}.docx`), buf);
-    
-    debugger;
-    
+
     res.setHeader('Content-Type', 'application/vnd.openxmlformats-officedocument.wordprocessingml.document');
     res.setHeader('Content-Disposition', `attachment; filename=doc-${uuidv4()}.docx`);
     res.send('Документ создан успешно!');
