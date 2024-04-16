@@ -1,7 +1,6 @@
 const express = require('express');
 const bodyParser = require('body-parser');
 const fs = require('fs');
-const { Document, Packer, Paragraph, TextRun } = require("docx");
 const { v4: uuidv4 } = require('uuid');
 const PizZip = require("pizzip");
 const Docxtemplater = require("docxtemplater");
@@ -60,7 +59,7 @@ app.post('/create-doc', async (req, res) => {
 
     res.setHeader('Content-Type', 'application/vnd.openxmlformats-officedocument.wordprocessingml.document');
     res.setHeader('Content-Disposition', `attachment; filename=doc-${uuidv4()}.docx`);
-    res.send('Документ создан успешно!');
+    res.send(buf);
 });
 
 const PORT = 3000; // Порт, на котором будет работать сервер
