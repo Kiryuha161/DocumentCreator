@@ -16,7 +16,7 @@ services:
     ports:
       - 8085:8085
     restart: unless-stopped
-    container_name: telegram-bot
+    container_name: document-creator
     volumes:
       - ./Documents:/usr/src/app/Documents
 
