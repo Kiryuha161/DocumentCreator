@@ -15,6 +15,10 @@ services:
       NODE_ENV: production
     ports:
       - 8085:8085
+    restart: unless-stopped
+    container_name: telegram-bot
+    volumes:
+      - ./Documents:/usr/src/app/Documents
 
 # The commented out section below is an example of how to define a PostgreSQL
 # database that your application can use. `depends_on` tells Docker Compose to
