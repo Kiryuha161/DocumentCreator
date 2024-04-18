@@ -16,6 +16,7 @@ var logger = getLogger();
 
 module.exports.errorLogger = function (error, functionName) {
     let logInfo = {
+        project: "DocumentCreator",
         timestamp: new Date(),
         functionName: functionName,
         level: 'error',
@@ -26,6 +27,7 @@ module.exports.errorLogger = function (error, functionName) {
 };
 module.exports.infoLogger = function (infoMessage, functionName, userName) {
     let logInfo = {
+        project: "DocumentCreator",
         timestamp: new Date(),
         functionName: functionName,
         level: 'info',
@@ -37,6 +39,7 @@ module.exports.infoLogger = function (infoMessage, functionName, userName) {
 };
 module.exports.warnLogger = function (warnMessage, functionName) {
     let logInfo = {
+        project: "DocumentCreator",
         timestamp: new Date(),
         functionName: functionName,
         level: 'warn',
@@ -46,10 +49,10 @@ module.exports.warnLogger = function (warnMessage, functionName) {
 };
 module.exports.startLogger = function(startMessage, port) {
     let startInfo = {
+        project: "DocumentCreator",
         timestamp: new Date(),
         level: 'info',
-        message: startMessage, 
-        port: port
+        message: startMessage
     };
 
     logger.info(JSON.stringify(startInfo));
