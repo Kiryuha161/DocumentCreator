@@ -15,8 +15,6 @@ configure({
 var logger = getLogger();
 
 module.exports.errorLogger = function (error, functionName) {
-    /* var responseErrorMessage = error.message;
-    logger.error("Function Name: ".concat(functionName, " \n Message: ").concat(responseErrorMessage, " \n Stack: ").concat(error.stack)); */
     let logInfo = {
         timestamp: new Date(),
         functionName: functionName,
@@ -27,7 +25,6 @@ module.exports.errorLogger = function (error, functionName) {
     logger.error(JSON.stringify(logInfo));
 };
 module.exports.infoLogger = function (infoMessage, functionName, userName) {
-    /* logger.info("Function Name: ".concat(functionName, " Message: ").concat(infoMessage)); */
     let logInfo = {
         timestamp: new Date(),
         functionName: functionName,
@@ -39,7 +36,6 @@ module.exports.infoLogger = function (infoMessage, functionName, userName) {
 
 };
 module.exports.warnLogger = function (warnMessage, functionName) {
-    /* logger.warn("Function Name: ".concat(functionName, " Warning: ").concat(warnMessage)); */
     let logInfo = {
         timestamp: new Date(),
         functionName: functionName,
@@ -49,10 +45,10 @@ module.exports.warnLogger = function (warnMessage, functionName) {
     logger.warn(JSON.stringify(logInfo));
 };
 module.exports.startLogger = function(startMessage, port) {
-    var startInfo = {
+    let startInfo = {
         timestamp: new Date(),
         level: 'info',
-        startMessage: startMessage, 
+        message: startMessage, 
         port: port
     };
 

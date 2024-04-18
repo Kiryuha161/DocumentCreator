@@ -69,7 +69,7 @@ app.post('/create-doc', async (req, res) => {
     }
 });
 
-const PORT = 8085; 
+const PORT = 3000; 
 
 app.listen(PORT, () => {
     logger.startLogger(`Сервер запущен на порту ${PORT}`, PORT);
