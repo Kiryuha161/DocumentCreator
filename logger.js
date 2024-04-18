@@ -20,7 +20,7 @@ module.exports.errorLogger = function (error, functionName) {
         timestamp: new Date(),
         functionName: functionName,
         level: 'error',
-        errorMessage: error.message,
+        message: error.message,
         stackTrace: error.stack
     };
     logger.error(JSON.stringify(logInfo));
