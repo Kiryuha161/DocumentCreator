@@ -63,7 +63,7 @@ app.post('/create-doc', async (req, res) => {
         res.setHeader('Content-Disposition', `attachment; filename=doc-${uuidv4()}.docx`);
         logger.infoLogger('Документ успешно создан', 'create-doc', `${secondName} ${firstName}${middleName}`);
         res.send(buf);
-    } catch {
+    } catch (error) {
         logger.errorLogger(error, 'create-doc'); 
         res.status(500).send('Произошла ошибка при создании документа');
     }
