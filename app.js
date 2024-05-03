@@ -6,9 +6,13 @@ const PizZip = require('pizzip');
 const Docxtemplater = require('docxtemplater');
 const path = require('path');
 const logger = require('./logger.js');
+const multer = require('multer');
+
+const upload = multer()
 
 const app = express();
-app.use(bodyParser.urlencoded({ extended: false }));
+app.use(bodyParser.urlencoded({ extended: true }));
+app.use(bodyParser.json());
 app.use(express.static(path.join(__dirname, 'public')));
 
 app.use((req, res, next) => {
@@ -17,8 +21,7 @@ app.use((req, res, next) => {
     next();
   });
 
-
-app.post('/create-doc', async (req, res) => {
+app.post('/create-doc', upload.none(), async (req, res) => {
     try {
         const documentContent = fs.readFileSync(path.resolve(__dirname, "./Document.docx"), "binary");
         const zip = new PizZip(documentContent);
@@ -27,6 +30,9 @@ app.post('/create-doc', async (req, res) => {
             paragraphLoop: true,
             linebreaks: true
         });
+
+        /* console.log(req);
+        console.log(res); */
 
         const firstName = req.body.firstName;
         const secondName = req.body.secondName;
