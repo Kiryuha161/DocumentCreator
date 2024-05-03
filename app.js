@@ -74,7 +74,7 @@ app.post('/create-doc', upload.none(), async (req, res) => {
 
         res.setHeader('Content-Type', 'application/vnd.openxmlformats-officedocument.wordprocessingml.document');
         res.setHeader('Content-Disposition', `attachment; filename=doc-${uuidv4()}.docx`);
-        logger.infoLogger('Документ успешно создан', 'create-doc', `${secondName} ${firstName}${middleName}`);
+        logger.infoLogger('Документ успешно создан', 'create-doc', `${secondName} ${firstName} ${middleName}`);
         res.send(buf);
     } catch (error) {
         logger.errorLogger(error, 'create-doc'); 
