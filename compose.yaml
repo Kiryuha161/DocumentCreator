@@ -1,9 +1,13 @@
 services:
   document_creator:
     image: api.registry.viomitra.ru/document_creator:latest
+    build:
+      context: .
+    environment:
+      NODE_ENV: production
+    container_name: document-creator
     volumes:
       - ./Documents:/usr/src/app/Documents
-    restart: unless-stopped
     networks:
       - traefik-public
     deploy:
@@ -11,6 +15,10 @@ services:
       replicas: 1
       placement:
         constraints: [node.role == manager]
+      restart_policy:
+        condition: any
+        delay: 5s
+        max_attempts: 3
       labels:
         - traefik.enable=true
         - traefik.docker.network=traefik-public
@@ -27,5 +35,3 @@ services:
 networks:
   traefik-public:
     external: true
-
-
