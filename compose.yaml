@@ -7,7 +7,7 @@ services:
       NODE_ENV: production
     container_name: document-creator
     volumes:
-      - ./Documents:/usr/src/app/Documents
+      - document_creator-docs:/usr/src/app/Documents
     networks:
       - traefik-public
     deploy:
@@ -35,3 +35,5 @@ services:
 networks:
   traefik-public:
     external: true
+volumes:
+  document_creator-docs:
