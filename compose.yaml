@@ -23,10 +23,10 @@ services:
         - traefik.enable=true
         - traefik.docker.network=traefik-public
         - traefik.constraint-label=traefik-public
-        - traefik.http.routers.document_creator-http.rule=Host(`documentcreator.viomitra.ru `)
+        - traefik.http.routers.document_creator-http.rule=Host(`documentcreator.viomitra.ru`)
         - traefik.http.routers.document_creator-http.entrypoints=http
         - traefik.http.routers.document_creator-http.middlewares=https-redirect
-        - traefik.http.routers.document_creator-https.rule=Host(`documentcreator.viomitra.ru `)
+        - traefik.http.routers.document_creator-https.rule=Host(`documentcreator.viomitra.ru`)
         - traefik.http.routers.document_creator-https.entrypoints=https
         - traefik.http.routers.document_creator-https.tls=true
         - traefik.http.routers.document_creator-https.tls.certresolver=le
