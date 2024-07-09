@@ -37,3 +37,4 @@ networks:
     external: true
 volumes:
   document_creator-docs:
+    name: document_creator-docs
