@@ -184,6 +184,19 @@ app.get('/get-index', async (req, res) => {
     }
 });
 
+// Маршрут для удаления документа из указанного индекса
+app.delete('/delete-document', async (req, res) => { 
+    const { index, documentId } = req.body;
+
+    try {
+        await elasticsearchService.deleteDocument(index, documentId);
+        res.status(200).send({ message: `Документ с идентификатором ${documentId} успешно удалён из индекса ${index}` });
+    } catch (error) {
+        console.error(error);
+        res.status(500).send({ message: `Ошибка удаления документа с идентификатором ${documentId} из индекса ${index}` });
+    }
+});
+
 //#endregion
 
 const PORT = 3000; 

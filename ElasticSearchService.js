@@ -85,6 +85,25 @@ class ElasticsearchService {
             throw error;
         }
     }
+
+    /**
+ * Удаление документа из указанного индекса по его идентификатору
+ * @param {*} indexName название индекса
+ * @param {*} documentId идентификатор документа
+ */
+    async deleteDocument(indexName, documentId) {
+        try {
+            const result = await this.client.delete({
+                index: indexName,
+                id: documentId
+            });
+            console.log(`Документ с идентификатором ${documentId} успешно удалён из индекса ${indexName}`);
+            return result;
+        } catch (error) {
+            console.error(`Ошибка удаления документа с идентификатором ${documentId} из индекса ${indexName}:`, error);
+            throw error;
+        }
+    }
 }
 
 module.exports = ElasticsearchService;
