@@ -1,12 +1,21 @@
 const { Client } = require('@elastic/elasticsearch');
 
+/**
+ * Сервис по работе с индексами Elasticsearch
+ */
 class ElasticsearchService {
     constructor(config) {
         this.client = new Client(config);
     }
 
+    /**
+     * Создание индекса с указанной структурой, если такого индекса ещё не существует
+     * @param {*} indexName название индекса
+     * @param {*} mappings структура полей данных в индексе
+     */
     async createIndexIfNotExists(indexName, mappings) {
         try {
+            console.log(indexName);
             const exists = await this.client.indices.exists({ index: indexName });
             if (!exists) {
                 await this.client.indices.create({
@@ -23,6 +32,12 @@ class ElasticsearchService {
         }
     }
 
+    /**
+     * Индексирование документа в указанном индексе (если документ есть - обновление, если нет - создание)
+     * @param {*} indexName название индекса
+     * @param {*} document документ
+     * @returns 
+     */
     async indexDocument(indexName, document) {
         try {
             const result = await this.client.index({
@@ -37,19 +52,30 @@ class ElasticsearchService {
         }
     }
 
+    /**
+     * Поиск документов указанных в запросе документов в указанном индексе
+     * @param {*} indexName название индекса
+     * @param {*} query запрос
+     * @returns 
+     */
     async searchDocuments(indexName, query) {
         try {
             const result = await this.client.search({
                 index: indexName,
                 body: query
             });
-            return result.body.hits.hits;
+            console.log(result.hits.hits);
+            return result.hits.hits;
         } catch (error) {
             console.error(`Ошибка поиска документа в индексе ${indexName}:`, error);
             throw error;
         }
     }
 
+    /**
+     * Удаление индекса по названию
+     * @param {*} indexName название индекса
+     */
     async deleteIndex(indexName) {
         try {
             await this.client.indices.delete({ index: indexName });
