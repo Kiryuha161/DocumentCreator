@@ -99,7 +99,7 @@ app.post('/create-doc', upload.none(), async (req, res) => {
 //#region Elasticsearch
 // Маршрут для индексации данных в Elasticsearch
 app.post('/index', async (req, res) => { //+
-    const { indexName, link, title, data } = req.body;
+    const { indexName, link, name, content, dateCreatd } = req.body;
 
     try {
         await elasticsearchService.createIndexIfNotExists(indexName, {
@@ -111,7 +111,7 @@ app.post('/index', async (req, res) => { //+
             }
         });
 
-        await elasticsearchService.indexDocument(indexName, { link, title, data });
+        await elasticsearchService.indexDocument(indexName, { link, name, content, dateCreatd });
 
         res.status(200).send({ message: `Данные индексированы успешно. Добавлен индекс ${indexName}` });
     } catch (error) {
@@ -120,7 +120,7 @@ app.post('/index', async (req, res) => { //+
     }
 });
 
-// Маршрут для поиска данных в Elasticsearch /search?query="step.ru"&index=documents
+// Маршрут для поиска документов в Elasticsearch /search?query="step.ru"&index=documents
 app.get('/search', async (req, res) => { // +
     const { query, index } = req.query;
 
