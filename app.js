@@ -8,15 +8,10 @@ const path = require('path');
 const logger = require('./logger.js');
 const multer = require('multer');
 const ElasticsearchService = require('./ElasticSearchService.js');
+const { mapping, getDefaultSearchQuery, defaultQuery, authElastic } = require('./variables.js');
 
 const upload = multer();
-const elasticsearchService = new ElasticsearchService({
-    node: "https://elastic.viomitra.ru/",
-    auth: {
-        username: 'elastic',
-        password: '3uV8U8btGcONRUkVzaaW'
-    }
-});
+const elasticsearchService = new ElasticsearchService(authElastic);
 
 const app = express();
 app.use(bodyParser.urlencoded({ extended: true }));
@@ -99,19 +94,11 @@ app.post('/create-doc', upload.none(), async (req, res) => {
 //#region Elasticsearch
 // Маршрут для индексации данных в Elasticsearch
 app.post('/index', async (req, res) => { //+
-    const { indexName, link, name, content, dateCreatd } = req.body;
+    const { indexName, link, name, tags, content, dateCreatd } = req.body;
 
     try {
-        await elasticsearchService.createIndexIfNotExists(indexName, {
-            properties: {
-                name: { type: 'text' },
-                content: { type: 'text' },
-                link: { type: 'text' },
-                dateCreatd: { type: 'date' }
-            }
-        });
-
-        await elasticsearchService.indexDocument(indexName, { link, name, content, dateCreatd });
+        await elasticsearchService.createIndexIfNotExists(indexName, mapping);
+        await elasticsearchService.indexDocument(indexName, { link, name, tags, content, dateCreatd });
 
         res.status(200).send({ message: `Данные индексированы успешно. Добавлен индекс ${indexName}` });
     } catch (error) {
@@ -122,17 +109,10 @@ app.post('/index', async (req, res) => { //+
 
 // Маршрут для поиска документов в Elasticsearch /search?query="step.ru"&index=documents
 app.get('/search', async (req, res) => { // +
-    const { query, index } = req.query;
-
     try {
-        const result = await elasticsearchService.searchDocuments(index, {
-            query: {
-                multi_match: {
-                    query: query,
-                    fields: ['content', 'link', 'name']
-                }
-            }
-        });
+        const { query, index } = req.query;
+        const searchQuery = getDefaultSearchQuery(query);
+        const result = await elasticsearchService.searchDocuments(index, searchQuery);
 
         res.status(200).send(result);
     } catch (error) {
@@ -143,10 +123,10 @@ app.get('/search', async (req, res) => { // +
 
 // Маршрут для удаления указанного индекса 
 app.delete('/delete-index', async (req, res) => { //+
-    const { query } = req.body;
-
     try {
+        const { query } = req.body;
         await elasticsearchService.deleteIndex(query);
+
         res.status(200).send({ message: 'Индекс успешно удалён' });
     } catch (error) {
         console.error(error);
@@ -156,10 +136,10 @@ app.delete('/delete-index', async (req, res) => { //+
 
 // Маршрут для добавления документа в указанный индекс 
 app.post('/add-document', async (req, res) => { 
-    const { index, title, content, link, tags, dateCreatd } = req.body;
-
     try {
+        const { index, title, content, link, tags, dateCreatd } = req.body;
         await elasticsearchService.indexDocument(index, { title, content, link, tags, dateCreatd });
+
         res.status(200).send({ message: `Документ успешно добавлен к индексу ${index}` });
     } catch (error) {
         console.error(error);
@@ -171,11 +151,7 @@ app.post('/add-document', async (req, res) => {
 app.get('/get-index', async (req, res) => { 
     try {
         const { query } = req.query; 
-        const result = await elasticsearchService.searchDocuments(query, {
-            query: {
-                match_all: {}
-            }
-        });
+        const result = await elasticsearchService.searchDocuments(query, defaultQuery);
 
         res.status(200).send(result);
     } catch (error) {
@@ -186,10 +162,10 @@ app.get('/get-index', async (req, res) => {
 
 // Маршрут для удаления документа из указанного индекса
 app.delete('/delete-document', async (req, res) => { 
-    const { index, documentId } = req.body;
-
     try {
+        const { index, documentId } = req.body;
         await elasticsearchService.deleteDocument(index, documentId);
+        
         res.status(200).send({ message: `Документ с идентификатором ${documentId} успешно удалён из индекса ${index}` });
     } catch (error) {
         console.error(error);

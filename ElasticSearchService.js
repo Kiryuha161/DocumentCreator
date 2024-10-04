@@ -6,6 +6,11 @@ const { Client } = require('@elastic/elasticsearch');
 class ElasticsearchService {
     constructor(config) {
         this.client = new Client(config);
+       /*  this.link = '';
+        this.name = '';
+        this.content = '';
+        this.id = '';
+        this.index = ''; */
     }
 
     /**
@@ -44,10 +49,11 @@ class ElasticsearchService {
                 index: indexName,
                 body: document
             });
+
             console.log(`Документ успешно проиндексирован в индексе ${indexName}`);
             return result;
         } catch (error) {
-            console.error(`Ошибка индексации документа в индексе${indexName}:`, error);
+            console.error(`Ошибка индексации документа в индексе ${indexName}:`, error);
             throw error;
         }
     }
@@ -64,7 +70,8 @@ class ElasticsearchService {
                 index: indexName,
                 body: query
             });
-            console.log(result.hits.hits);
+
+            console.log(`Поиск документов выдал следующие результаты: ${result.hits.hits}`)
             return result.hits.hits;
         } catch (error) {
             console.error(`Ошибка поиска документа в индексе ${indexName}:`, error);
@@ -79,6 +86,7 @@ class ElasticsearchService {
     async deleteIndex(indexName) {
         try {
             await this.client.indices.delete({ index: indexName });
+
             console.log(`Индекс ${indexName} удалён успешно`);
         } catch (error) {
             console.error(`Ошибка удаление индекса ${indexName}:`, error);
@@ -97,6 +105,7 @@ class ElasticsearchService {
                 index: indexName,
                 id: documentId
             });
+            
             console.log(`Документ с идентификатором ${documentId} успешно удалён из индекса ${indexName}`);
             return result;
         } catch (error) {
